@@ -24,6 +24,7 @@ from itertools import chain
 
 # TODO: Remove circular dependency between blaze.objects.Array and blaze.compute
 import blaze
+from blaze.compute.expr.graph import construct
 from ..py2help import dict_iteritems, exec_
 from datashape import coretypes as T, dshape
 
@@ -166,7 +167,7 @@ def apply_function(blaze_func, *args, **kwargs):
     # -------------------------------------------------
     # Construct graph
 
-    term = construct.construct(blaze_func, ctx, overload, args)
+    term = construct(blaze_func, ctx, overload, args)
     desc = DeferredDescriptor(term.dshape, (term, ctx))
 
     # TODO: preserve `user` metadata

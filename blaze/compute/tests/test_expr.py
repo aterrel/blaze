@@ -4,8 +4,9 @@ import unittest
 
 from datashape import dshape
 from dynd import nd, ndt
-from blaze import array
 from blaze.compute.ops.ufuncs import add, multiply
+from blaze.compute.expr import *
+from blaze import array
 
 
 class TestGraph(unittest.TestCase):
@@ -19,6 +20,14 @@ class TestGraph(unittest.TestCase):
         self.assertFalse(ctx.constraints)
         self.assertEqual(graph.dshape, dshape('10 * float64'))
 
+class TestExpr(unittest.TestCase):
+
+    def test_arithmetic_ops(self):
+        a = array(nd.range(10, dtype=ndt.int32))
+        expr = AdditionNode(a, 3)
+        self.assertEqual(expr.args[0], a)
+        self.assertEqual(expr.args[1], 3)
+        assert False
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,29 +6,46 @@ Each expression node carries a DataShape as type.
 
 from __future__ import absolute_import, division, print_function
 from functools import partial
+from abc import ABCMeta
 
 
 class BlazeExprNode(object):
     """Abstract base class for blaze expressions"""
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, desc, *args, **kwargs):
         """Use new to automatically return canonicalized classes"""
-        return
+        return super(BlazeExprNode, cls).__new__(cls)
 
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
         super(BlazeExprNode, self).__init__()
 
+    def __str__(self):
+        arg_str = kw_str = ""
+        if self._args:
+            arg_str = "\n  args: "
+            arg_str += (',\n'.join(map(str, self._args))).replace("\n", "\n        ")
+            arg_str += "\n"
+        if self._kwargs:
+            kw_str = "\n  kwargs: "
+            kw_str += (',\n'.join(map(str, self._kwargs))).replace("\n", "\n          ")
+            kw_str += "\n"
+        return self.__class__.__name__ + "{" + arg_str + kw_str + "}"
+
+    @property
+    def args(self):
+        return self._args
+
 
 class OpNode(BlazeExprNode):
     """Abstract node representing the node is an operator"""
-    pass
+    __metaclass__ = ABCMeta
 
 
 class ParallelOpNode(BlazeExprNode):
     """Abstract node representing the node is a parallel operator"""
-    pass
+    __metaclass__ = ABCMeta
 
 
 class ArithmeticNode(BlazeExprNode):
@@ -36,9 +53,24 @@ class ArithmeticNode(BlazeExprNode):
     pass
 
 
+class AdditionNode(ArithmeticNode):
+    """Node for adding and subtracting numbers"""
+    pass
+
+
+class MultiplicationNode(ArithmeticNode):
+    """Node for multiplying numbers"""
+    pass
+
+
+class DivisionNode(ArithmeticNode):
+    """Node for dividing numbers"""
+    pass
+
+
 class MutatorNode(BlazeExprNode):
     """Abstract node representing shape changing qualities of a node"""
-    pass
+    __metaclass__ = ABCMeta
 
 
 class AppendNode(MutatorNode):
@@ -56,7 +88,7 @@ class ReduceNode(ParallelOpNode):
     pass
 
 
-class SelectorNode(BlaseExprNode):
+class SelectorNode(BlazeExprNode):
     """Abstract node representing the node is an selection"""
     pass
 

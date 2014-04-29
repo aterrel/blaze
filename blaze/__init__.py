@@ -92,6 +92,8 @@ def test(verbosity=1, xunitfile=None, exit=False):
     # Add all 'tests' subdirectories to the options
     rootdir = os.path.dirname(__file__)
     for root, dirs, files in os.walk(rootdir):
+        print("walking root", root)
+        if root.endswith("compute"): import pdb; pdb.set_trace()
         if 'tests' in dirs:
             testsdir = os.path.join(root, 'tests')
             argv.append(testsdir)

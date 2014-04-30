@@ -38,6 +38,10 @@ class BlazeExprNode(object):
         return self._args
 
 
+class NameNode(BlazeExprNode):
+    """Node representing blaze object"""
+    pass
+
 class OpNode(BlazeExprNode):
     """Abstract node representing the node is an operator"""
     __metaclass__ = ABCMeta
